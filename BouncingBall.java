@@ -45,7 +45,7 @@ public class BouncingBall implements Runnable
         color = new Color((float)Math.random(), (float)Math.random(), (float)Math.random());
         //Начальное положение случайно
         x = Math.random() * (field.getSize().getWidth() - 2 * radius) + radius;
-        y = Math.random() * (field.getSize().getWidth() - 2 * radius) + radius;;
+        y = Math.random() * (field.getSize().getHeight() - 2 * radius) + radius;
         //Создаем новый экземпляр потока, передавая аргументом
         //ссылку на класс, реализующий Runnable(т.е. на bouncingball)
         Thread thisThread = new Thread(this);
@@ -79,7 +79,6 @@ public class BouncingBall implements Runnable
                     else
                         if (y + speedY <= radius)
                         {
-                            //System.out.println("I was here");
                             speedY = -speedY;
                             y = radius;
                         }

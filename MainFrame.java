@@ -26,11 +26,12 @@ public class MainFrame extends JFrame
         Toolkit kit = Toolkit.getDefaultToolkit();
         //Отцентрировать окно приложения на экране
         setLocation((kit.getScreenSize().width - WIDTH)/2, (kit.getScreenSize().height - HEIGHT)/2);
-        setExtendedState(MAXIMIZED_BOTH);
+        //setExtendedState(MAXIMIZED_BOTH);
 
         //Создать меню
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
+
         JMenu ballMenu = new JMenu("Мячи");
         Action addBallAction = new AbstractAction("Добавить мяч") {
             public void actionPerformed(ActionEvent event) {
@@ -44,9 +45,9 @@ public class MainFrame extends JFrame
         };
         menuBar.add(ballMenu);
         ballMenu.add(addBallAction);
+
         JMenu controlMenu = new JMenu("Управление");
         menuBar.add(controlMenu);
-
         Action pauseAction = new AbstractAction("Приостановить движ") {
             public void actionPerformed(ActionEvent e) {
                 field.pause();
