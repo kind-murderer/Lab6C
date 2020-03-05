@@ -1,11 +1,9 @@
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Rectangle2D;
 
 public class Teleport
 {
-    //центры
+    //левый верхний край
     private double x_in;
     private double y_in;
     private double x_out;
