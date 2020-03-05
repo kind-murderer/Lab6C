@@ -22,6 +22,10 @@ public class BouncingBall implements Runnable
     private double speedX;
     private double speedY;
 
+    //Если зашел в creator, то снова сдублироваться он сможет только после выхода из него
+    // (иначе там будут создаваться копии, копии копий и т.д. пока все не покинут область)
+    private boolean flag_untouchable;
+
     //КОНСТРУКТОР
     public BouncingBall (Field field)
     {
@@ -46,12 +50,37 @@ public class BouncingBall implements Runnable
         //Начальное положение случайно
         x = Math.random() * (field.getSize().getWidth() - 2 * radius) + radius;
         y = Math.random() * (field.getSize().getHeight() - 2 * radius) + radius;
+        //флаг
+        flag_untouchable = false;//по умолчанию
         //Создаем новый экземпляр потока, передавая аргументом
         //ссылку на класс, реализующий Runnable(т.е. на bouncingball)
         Thread thisThread = new Thread(this);
         //Запускаем поток
         thisThread.start();
     } //Конец конструктора
+    //КОНСТРУКТОРА КОПИРОВАНИЯ
+    public BouncingBall (Field field, BouncingBall b)
+    {
+        this.field = field;
+
+        radius = b.radius;
+        speed = b.speed;
+
+        speedX = b.speedX;
+        speedY = b.speedY;
+
+        color = b.color;
+
+        x = b.x;
+        y = b.y;
+
+        flag_untouchable = b.flag_untouchable;
+
+        Thread thisThread = new Thread(this);
+
+        thisThread.start();
+    } //Конец конструктора
+
     //Метод run() исполняется внутри потока. Когда он завершвет работу,
     //то завершается и поток
     public void run()
@@ -96,11 +125,45 @@ public class BouncingBall implements Runnable
                             }
                             else if((field.getDestroyer() != null) &&
                         (x + speedX - radius >= field.getDestroyer().getX_destr()) &&
-                        (x + speedX + radius <= field.getDestroyer().getX_destr() + field.getTeleport().getRADIUS() * 2) &&
+                        (x + speedX + radius <= field.getDestroyer().getX_destr() + field.getDestroyer().getRADIUS() * 2) &&
                         (y + speedY - radius >= field.getDestroyer().getY_destr()) &&
-                        (y + speedY + radius <= field.getDestroyer().getY_destr() + field.getTeleport().getRADIUS() * 2))
+                        (y + speedY + radius <= field.getDestroyer().getY_destr() + field.getDestroyer().getRADIUS() * 2))
                             {
+                                synchronized (field.getBalls()) {
                                 field.getBalls().remove(this);
+                                }
+                            }
+                            else if((field.getCreator() != null) &&
+                        (x + speedX - radius >= field.getCreator().getX_creat()) &&
+                        (x + speedX + radius <= field.getCreator().getX_creat() + field.getCreator().getRADIUS() * 2) &&
+                        (y + speedY - radius >= field.getCreator().getY_creat()) &&
+                        (y + speedY + radius <= field.getCreator().getY_creat() + field.getCreator().getRADIUS() * 2))
+                            {
+                                if(flag_untouchable == false)
+                                {
+                                    flag_untouchable = true; //не трогаем больше(и дубликат тоже будет с тем же флагом пока что)
+                                    BouncingBall duplicate = new BouncingBall(field, this);
+                                    double angle = Math.random() * 2 * Math.PI;
+                                    duplicate.speedX = 3 * Math.cos(angle);
+                                    duplicate.speedY = 3 * Math.sin(angle);
+                                    synchronized (field.getBalls()){
+                                    field.getBalls().add(duplicate);
+                                    }
+                                    //двигаемся дальше тоже
+                                    x += speedX;
+                                    y += speedY;
+                                } else //заглянуть на будущий шаг, мб уже пора снять флаг (прям перед выходом т.е.)
+                                {
+                                    x += speedX;
+                                    y += speedY;
+                                    if ((x + speedX - radius <= field.getCreator().getX_creat()) ||
+                                            (x + speedX + radius >= field.getCreator().getX_creat() + field.getCreator().getRADIUS() * 2) ||
+                                            (y + speedY - radius <= field.getCreator().getY_creat()) ||
+                                            (y + speedY + radius >= field.getCreator().getY_creat() + field.getCreator().getRADIUS() * 2))
+                                    {
+                                        flag_untouchable = false;
+                                    }
+                                }
                             }
                             else //просто смещаемся
                             {

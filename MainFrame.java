@@ -69,11 +69,11 @@ public class MainFrame extends JFrame
             {
                 field.createTeleport();
                 field.createDestroyer();
+                field.createCreator();
             }
         });
         Box hboxButtons = Box.createHorizontalBox();
         hboxButtons.add(buttonTeleportAndOther);
-        //hboxButtons.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
         menuBar.add(hboxButtons);
         //Добавить в центр граничной компановки поле Field
         getContentPane().add(field, BorderLayout.CENTER);
