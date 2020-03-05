@@ -85,7 +85,7 @@ public class BouncingBall implements Runnable
                                 speedY = -speedY;
                                 y = new Double(field.getHeight()-radius).intValue();
                             }
-                            else if((field.getTeleport() != null) &&
+                            else if((field.getTeleport() != null) && //ПОПАДАНИЕ В ТЕЛЕПОРТ
                         (x + speedX - radius >= field.getTeleport().getX_in()) &&
                         (x + speedX + radius <= field.getTeleport().getX_in() + field.getTeleport().getRADIUS() * 2) &&
                         (y + speedY - radius >= field.getTeleport().getY_in()) &&
@@ -93,6 +93,14 @@ public class BouncingBall implements Runnable
                             {
                                 x = field.getTeleport().getX_out() + field.getTeleport().getRADIUS() ;
                                 y = field.getTeleport().getY_out() + field.getTeleport().getRADIUS() ;
+                            }
+                            else if((field.getDestroyer() != null) &&
+                        (x + speedX - radius >= field.getDestroyer().getX_destr()) &&
+                        (x + speedX + radius <= field.getDestroyer().getX_destr() + field.getTeleport().getRADIUS() * 2) &&
+                        (y + speedY - radius >= field.getDestroyer().getY_destr()) &&
+                        (y + speedY + radius <= field.getDestroyer().getY_destr() + field.getTeleport().getRADIUS() * 2))
+                            {
+                                field.getBalls().remove(this);
                             }
                             else //просто смещаемся
                             {

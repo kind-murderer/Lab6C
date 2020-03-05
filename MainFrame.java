@@ -65,8 +65,10 @@ public class MainFrame extends JFrame
         JButton buttonTeleportAndOther = new JButton("Добавить телепорт и др");
         buttonTeleportAndOther.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 field.createTeleport();
+                field.createDestroyer();
             }
         });
         Box hboxButtons = Box.createHorizontalBox();

@@ -12,12 +12,12 @@ public class Teleport
     private static final int RADIUS = 42; //вот тут, кстати, не синхронизировано с ball, можно поместить это в field,
     // обозначить там "максимальный радиус круга, возможный на этом поле", мы все равно передаем field в BouncingBall
     //вообще, пусть будет 42, больше шансов влететь в поле
-    private Field field;
+    //private Field field;
 
     //КОНСТРУКТОР
     public Teleport(Field field)
     {
-        this.field = field;
+       // this.field = field;
 
         x_in = 0; //пусть вход будет где-нибудь на левой стенке
         y_in = Math.random() * (field.getSize().getHeight() - 2 * RADIUS);
