@@ -45,7 +45,7 @@ public class BouncingBall implements Runnable
         color = new Color((float)Math.random(), (float)Math.random(), (float)Math.random());
         //Начальное положение случайно
         x = Math.random() * (field.getSize().getWidth() - 2 * radius) + radius;
-        y = Math.random() * (field.getSize().getWidth() - 2 * radius) + radius;;
+        y = Math.random() * (field.getSize().getHeight() - 2 * radius) + radius;
         //Создаем новый экземпляр потока, передавая аргументом
         //ссылку на класс, реализующий Runnable(т.е. на bouncingball)
         Thread thisThread = new Thread(this);
@@ -70,24 +70,29 @@ public class BouncingBall implements Runnable
                     speedX = -speedX;
                     x = radius;
                 }
-                else
-                    if(x + speedX >= field.getWidth() - radius) //от правой стенки
+                else if(x + speedX >= field.getWidth() - radius) //от правой стенки
                     {
                         speedX = -speedX;
                         x = new Double(field.getWidth() - radius).intValue();
                     }
-                    else
-                        if (y + speedY <= radius)
+                    else if (y + speedY <= radius)
                         {
-                            //System.out.println("I was here");
                             speedY = -speedY;
                             y = radius;
                         }
-                        else
-                            if (y + speedY >= field.getHeight() - radius)
+                        else if (y + speedY >= field.getHeight() - radius)
                             {
                                 speedY = -speedY;
                                 y = new Double(field.getHeight()-radius).intValue();
+                            }
+                            else if((field.getTeleport() != null) &&
+                        (x + speedX - radius >= field.getTeleport().getX_in()) &&
+                        (x + speedX + radius <= field.getTeleport().getX_in() + field.getTeleport().getRADIUS() * 2) &&
+                        (y + speedY - radius >= field.getTeleport().getY_in()) &&
+                        (y + speedY + radius <= field.getTeleport().getY_in() + field.getTeleport().getRADIUS() * 2) )
+                            {
+                                x = field.getTeleport().getX_out() + field.getTeleport().getRADIUS() ;
+                                y = field.getTeleport().getY_out() + field.getTeleport().getRADIUS() ;
                             }
                             else //просто смещаемся
                             {

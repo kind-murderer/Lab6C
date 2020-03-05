@@ -14,6 +14,8 @@ public class Field extends JPanel
     private boolean paused;
     //Динамический список прыгающих мячей
     private ArrayList<BouncingBall> balls = new ArrayList<BouncingBall>(10);
+    //Объект телепорта
+    private Teleport Portal = null ;//йо =new Teleport только тогда, когда будет нарисовано в MainFrame, (в конструкторе телепорта требуется размер, а он 0,0 по умолчанию)
     //Таймер отвечает за регулярную генерацию событий ActionEvent
     private Timer repaintTimer = new Timer(10, new ActionListener(){
         public void actionPerformed(ActionEvent ev)
@@ -26,6 +28,8 @@ public class Field extends JPanel
     public Field()
     {
         setBackground(Color.LIGHT_GRAY);
+
+
         repaintTimer.start();
     }
     //Конец констркутора
@@ -34,17 +38,28 @@ public class Field extends JPanel
     {
         super.paintComponent(g);
         Graphics2D canvas = (Graphics2D) g;
+        //Прорисовка портла, если добавлен
+        if(Portal != null) Portal.paint(canvas);
         //Последрвательно запросить перерисовку от всех мячей из списка
         for(BouncingBall ball:balls)
         {
             ball.paint(canvas);
         }
+
     }
     //Метод добавления нового мяча
     public void addBall()
     {
         balls.add(new BouncingBall(this));
     }
+
+    //Метод создания Телепорта
+    public void createTeleport()
+    {
+        Portal = new Teleport(this);
+    }
+    public Teleport getTeleport()//в ball нужен *этот* порт
+    { return Portal;}
     //Синхронизированный метод(только один потк мб внутри)
     public synchronized void pause()
     { paused = true;}

@@ -1,12 +1,7 @@
-import java.awt.BorderLayout;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class MainFrame extends JFrame
 {
@@ -26,11 +21,12 @@ public class MainFrame extends JFrame
         Toolkit kit = Toolkit.getDefaultToolkit();
         //Отцентрировать окно приложения на экране
         setLocation((kit.getScreenSize().width - WIDTH)/2, (kit.getScreenSize().height - HEIGHT)/2);
-        setExtendedState(MAXIMIZED_BOTH);
+        //setExtendedState(MAXIMIZED_BOTH);
 
         //Создать меню
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
+
         JMenu ballMenu = new JMenu("Мячи");
         Action addBallAction = new AbstractAction("Добавить мяч") {
             public void actionPerformed(ActionEvent event) {
@@ -44,9 +40,9 @@ public class MainFrame extends JFrame
         };
         menuBar.add(ballMenu);
         ballMenu.add(addBallAction);
+
         JMenu controlMenu = new JMenu("Управление");
         menuBar.add(controlMenu);
-
         Action pauseAction = new AbstractAction("Приостановить движ") {
             public void actionPerformed(ActionEvent e) {
                 field.pause();
@@ -66,6 +62,17 @@ public class MainFrame extends JFrame
         resumeMenuItem = controlMenu.add(resumeAction);
         resumeMenuItem.setEnabled(false);
 
+        JButton buttonTeleportAndOther = new JButton("Добавить телепорт и др");
+        buttonTeleportAndOther.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                field.createTeleport();
+            }
+        });
+        Box hboxButtons = Box.createHorizontalBox();
+        hboxButtons.add(buttonTeleportAndOther);
+        //hboxButtons.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
+        menuBar.add(hboxButtons);
         //Добавить в центр граничной компановки поле Field
         getContentPane().add(field, BorderLayout.CENTER);
     } //Конец конструктора
